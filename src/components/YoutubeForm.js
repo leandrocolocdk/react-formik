@@ -1,35 +1,42 @@
 import React from 'react'
 import { useFormik } from 'formik'
 
+const initialValues = {
+    name: '',
+    email: '',
+    channel: ''
+}
+const onSubmit = values => {
+    console.log('Form data', values)
+}
+const validate = values => {
+    let errors = {}
+
+    if (!values.name) {
+        errors.name = "Required"
+    }
+
+    if (!values.email) {
+        errors.email = "Required"
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\[A-Z]{2,4}$/i.test(values.email)) {
+        errors.email = 'Inavlid email format'
+    }
+
+    if (!values.channel) {
+        errors.channel = "Required"
+    }
+
+    return errors
+}
+
 function YoutubeForm() {
     const formik = useFormik({
-        initialValues: {
-            name: '',
-            email: '',
-            channel: ''
-        },
-        onSubmit: values => {
-            console.log('Form data', values)
-        },
-        validate: values => {
-            let errors = {}
-
-            if (!values.name) {
-                errors.name = "Required"
-            }
-
-            if (!values.email) {
-                errors.email = "Required"
-            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\[A-Z]{2,4}$/i.test(values.email)) {
-                errors.email = 'Inavlid email format'
-            }
-
-            if (!values.channel) {
-                errors.channel = "Required"
-            }
-        }
+        initialValues,
+        onSubmit,
+        validate
     })
     // console.log('Formik values:', formik.values)
+    console.log('Formik errors:', formik.errors)
     return (
         <div>
             <form onSubmit={formik.handleSubmit}>
