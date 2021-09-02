@@ -1,5 +1,5 @@
 import React from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import TextError from './TextError'
 
@@ -12,7 +12,9 @@ const initialValues = {
     social: {
         facebook: '',
         twitter: ''
-    }
+    },
+    phoneNumbers: ['', ''],
+    phNumbers: [''],
 }
 const onSubmit = values => {
     console.log('Form data', values)
@@ -76,7 +78,7 @@ function YoutubeForm() {
                         {
                             props => {
                                 const { field, form, meta } = props
-                                console.log('Render props', props)
+                                // console.log('Render props', props)
                                 return (
                                     <div>
                                         <input type="text" id='address' {...field} />
@@ -104,6 +106,44 @@ function YoutubeForm() {
                         id='twitter' name='social.twitter'
                     />
                     <ErrorMessage name="twitter" />
+                </div>
+
+                <div className="form-control">
+                    <label htmlFor='primaryPh'>Primary phone number</label>
+                    <Field type='text'
+                        id='primaryPh' name='phoneNumbers[0]'
+                    />
+                </div>
+
+                <div className="form-control">
+                    <label htmlFor='secondaryPh'>Secondary phone number</label>
+                    <Field type='text'
+                        id='secondaryPh' name='poneNumbers[1]'
+                    />
+                </div>
+
+                <div className="form-control">
+                    <label htmlFor='secondaryPh'>List of phone number</label>
+                    <FieldArray name='phNumbers'>
+                        {(fieldArrayProps) => {
+                            console.log('fieldArrayProps', fieldArrayProps)
+                            const { push, remove, form } = fieldArrayProps
+                            const { values } = form
+                            const { phNumbers } = values
+                            return (
+                                <div>
+                                    {phNumbers.map((phNumber, index) => (
+                                        <div key={index}>
+                                            <Field name={`phNumbers[${index}]`} />
+                                            {index > 0 &&
+                                                <button type="button" onClick={() => remove(index)}> - </button>}
+                                            <button type="button" onClick={() => push('')}> + </button>
+                                        </div>))
+                                    }
+                                </div>
+                            )
+                        }}
+                    </FieldArray>
                 </div>
 
                 <button type="submit">Submit</button>
